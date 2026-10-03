@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Likhaya's Study Hub</title>
+<style>
+  :root{
+    --primary:#15411a; --primary-dark:#0b2812; --accent:#04230f; --accent-light:#E4F1F0;
+    --bg:#F6F7FB; --card:#FFFFFF; --text:#1B1E2B; --muted:#4A4F63;
+    --border:#D9DCE8; --focus:#FFB020; --success:#1E7B34; --danger:#B3261E;
+    --radius:10px; --shadow:0 2px 8px rgba(27,30,43,.08);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:'Segoe UI',Times 'Times New Roman', Times, serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:16px}
+  
+  /* Focus visibility (WCAG 2) */
+  
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+  .skip-link{position:absolute;left:-999px;top:0;background:var(--primary);color:#fff;padding:10px 16px;z-index:100;border-radius:0 0 8px 0}
+  .skip-link:focus{left:0}
+ 
+  /* Header / nav consistency */ 
+ 
+  header.topbar{background:var(--primary);color:#fff}
+  .topbar-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding:12px 20px}
+  .brand{font-weight:700;font-size:1.15rem;letter-spacing:.3px;color:#fff;text-decoration:none;white-space:nowrap}
+  nav.main-nav{display:flex;gap:6px}
+  nav.left-nav{justify-content:flex-end}
+  .header-right{display:flex;align-items:center;gap:14px}
+  nav.right-nav{justify-content:flex-start}
+  nav.main-nav a{color:#E4E7F7;text-decoration:none;padding:8px 14px;border-radius:0;border-bottom:2px solid transparent;font-size:.95rem}
+  nav.main-nav a[aria-current="page"]{border-bottom-color:#fff;color:#fff;font-weight:600}
+  nav.main-nav a:hover{border-bottom-color:rgba(255,255,255,.75);color:#fff}
+  .user-chip{display:flex;align-items:center;gap:8px;font-size:.9rem}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;object-fit:cover;border:2px solid rgba(255,255,255,.25)}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  main{max-width:1100px;margin:0 auto;padding:28px 20px 64px}
+  footer{background:var(--primary-dark);color:#C9CEE9;padding:20px;text-align:center;font-size:.9rem}
+ 
+  /* Typography & headings */
+ 
+  h1{font-size:1.9rem;margin:0 0 10px} h2{font-size:1.35rem;margin:26px 0 10px} h3{font-size:1.05rem;margin:0 0 8px}
+  .muted{color:var(--muted)}
+  .breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:14px}
+  .breadcrumb a{color:var(--primary)}
+ 
+  /* Hero */
+ 
+  .hero{background:#0b2812;color:#fff;border-radius:0;padding:44px 40px;margin-bottom:28px}
+  .hero h1{font-size:2.2rem;margin-bottom:8px}
+  .hero p{max-width:560px;color:#E4E7F7;margin:0 0 22px}
+  .searchbar{display:flex;gap:10px;max-width:620px;flex-wrap:wrap}
+  .searchbar input{flex:1;min-width:220px;padding:13px 16px;border-radius:0;border:2px solid transparent;font-size:1rem}
+  .searchbar input:focus-visible{border-color:var(--focus)}
+ 
+  /* Buttons */
+ 
+  .btn{display:inline-block;border:none;cursor:pointer;font-size:.95rem;font-weight:600;padding:12px 22px;border-radius:0;text-decoration:none;text-align:center}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#0B6665}
+  .btn-secondary{background:#fff;color:var(--primary)}
+  .btn-secondary:hover{background:#EEF0FA}
+  .btn-ghost{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+  .btn-ghost:hover{background:#EEF0FA}
+  .btn-small{padding:8px 16px;font-size:.88rem}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
+ 
+  /* Cards & grids */
+ 
+  .grid{display:grid;gap:18px}
+  .grid-3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .card h3 a{color:var(--primary);text-decoration:none}
+  .card h3 a:hover{text-decoration:underline}
+  .tag{display:inline-block;background:var(--accent-light);color:var(--accent);border-radius:0;padding:3px 12px;font-size:.8rem;font-weight:600;margin-right:6px}
+  .tag-blue{background:#E7EAF9;color:var(--primary)}
+  .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--muted);margin:8px 0 14px}
+  .meta span b{color:var(--text)}
+  .stars{color:#B98A00;font-size:.9rem;letter-spacing:1px}
+  .rating-value{color:var(--text);font-size:.82rem;font-weight:700;letter-spacing:0}
+  .how-it-works .card{border-radius:0}
+  .group-card{position:relative;display:flex;flex-direction:column;min-height:230px;padding-bottom:58px}
+  .group-card h3{margin-bottom:4px}
+  .group-card .meta{margin:0 0 14px}
+  .group-card .group-card-bottom{position:absolute;right:20px;bottom:16px;left:20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .group-card .member-count{font-size:.88rem;color:var(--muted);text-align:right}
+  .group-link{color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+  .group-link:hover{color:var(--accent)}
+ 
+  /* Steps*/
+ 
+  .steps{display:flex;gap:0;margin:0 0 26px}
+  .step{flex:1;text-align:center;font-size:.85rem;color:var(--muted);border-top:4px solid var(--border);padding-top:10px}
+  .step.active{border-top-color:var(--accent);color:var(--accent);font-weight:700}
+  .step.done{border-top-color:var(--success);color:var(--success)}
+  label{display:block;font-weight:600;margin:14px 0 6px;font-size:.92rem}
+  input[type=text],input[type=date],input[type=time],select,textarea{width:100%;padding:11px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;font-family:inherit;background:#fff}
+  textarea{min-height:80px;resize:vertical}
+  .hint{font-size:.82rem;color:var(--muted);margin-top:4px}
+  .field-error{display:none;color:var(--danger);font-size:.85rem;font-weight:600;margin-top:4px}
+  input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--danger)}
+ 
+  /* Calendar */
+ 
+  .session{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .session .when{font-weight:700}
+  .session .status{font-size:.85rem;font-weight:700}
+  .status.confirmed{color:var(--success)}
+  .status.pending{color:#8A5A00}
+  .session-actions{display:flex;gap:8px;flex-wrap:wrap}
+ 
+  /* feedback */
+ 
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:13px 22px;border-radius:10px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:50}
+ 
+  /* Messaging */
+ 
+  .thread{border:1.5px solid var(--border);border-radius:10px;padding:16px;background:#fff;margin-bottom:12px;max-height:260px;overflow:auto}
+  .msg{margin-bottom:14px;display:flex;gap:10px}
+  .msg .bubble{background:var(--bg);border-radius:12px;padding:10px 14px;max-width:75%}
+  .msg.mine{flex-direction:row-reverse}
+  .msg.mine .bubble{background:var(--accent-light)}
+  .msg .who{font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:3px}
+  .msg time{font-size:.72rem;color:var(--muted);margin-left:8px}
+ 
+  /* Celebration banner*/
+ 
+  .celebrate{background:transparent;border:none;border-radius:0;color:#175C29;padding:18px 22px;margin-bottom:20px;display:flex;gap:16px;align-items:center}
+  .celebrate .big{font-size:1.25rem;font-weight:800}
+ 
+  /* Empty state */
+ 
+  .empty{text-align:center;padding:56px 20px;background:#fff;border:1.5px dashed var(--border);border-radius:14px}
+  .empty .emoji{font-size:2.6rem}
+ 
+  /* Members / social */
+ 
+  .member{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+  .member:last-child{border-bottom:none}
+  .member .avatar{width:30px;height:30px;font-size:.8rem}
+  .conduct{font-size:.83rem;color:var(--muted);background:#FBF6E9;border:1px solid #EAD9A0;border-radius:8px;padding:10px 14px;margin-top:18px}
+  .success-text{color:var(--success);font-weight:700}
+  .danger-text{color:var(--danger)}
+  @media (max-width:760px){
+    .topbar-inner{grid-template-columns:1fr auto;gap:8px 12px}
+    .brand{grid-column:1/-1;grid-row:1;justify-self:center}
+    nav.left-nav{grid-column:1;grid-row:2;justify-content:flex-start}
+    .header-right{grid-column:2;grid-row:2;justify-content:flex-end}
+    nav.right-nav{gap:2px}
+  }
+  @media (max-width:640px){
+    .hero{padding:30px 22px}
+    .hero h1{font-size:1.6rem}
+    nav.main-nav a{padding:8px 7px;font-size:.78rem}
+    .header-right{gap:6px}
+    .user-chip>span:last-child{display:none}
+  }
+  @media (max-width:480px){
+    .topbar-inner{grid-template-columns:1fr}
+    .brand{grid-column:1;grid-row:1}
+    nav.left-nav{grid-column:1;grid-row:2;justify-content:center}
+    .header-right{grid-column:1;grid-row:3;justify-content:center}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <nav class="main-nav left-nav" aria-label="Main navigation">
+      <a href="#/home" data-nav="home">Home</a>
+      <a href="#/search" data-nav="search">Find a group</a>
+    </nav>
+    <a class="brand" href="#/home">Likhaya&rsquo;s Study Hub</a>
+    <div class="header-right">
+    <nav class="main-nav right-nav" aria-label="More navigation">
+      <a href="#/create" data-nav="create">Create a group</a>
+      <a href="#/mygroups" data-nav="mygroups">My groups</a>
+    </nav>
+    <div class="user-chip"><span class="avatar" aria-hidden="true"><img src="https://i.scdn.co/image/ab67616d0000b273df719605b0ea2e8132492f54" alt="Likhaya profile picture"></span><span>Likhaya</span></div>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" tabindex="-1"></main>
+
+<footer>
+  Likhaya&rsquo;s Study Hub | Study Smarter, Together. &middot;
+  <a href="#" style="color:#C9CEE9">Code of conduct</a> &middot;
+  <a href="#" style="color:#C9CEE9">Report a concern</a> &middot; &copy; 2026
+</footer>
+
+<script>
+const screens = {};
+
+screens.home = `
+  <section class="hero">
+    <h1>Study Smarter, Together.</h1>
+    <p>Find a study group for your module and schedule your first session in under five minutes. No more studying alone.</p>
+    <form class="searchbar" onsubmit="go('#/search');return false;" aria-label="Search for a study group by module">
+      <input type="text" id="module-search" name="module" list="modules" placeholder="HCIN6222  Human Computer Interaction" aria-label="Module name or code">
+      <datalist id="modules">
+        <option value="HCIN6222 - Human Computer Interaction"><option value="C0S1501 - Theoretical Computer Science">
+        <option value="MAT1503 - Linear Algebra"><option value="DATA6222 - Databases (Introduction & Intermediate)">
+        <option value="PROG6212 - Programming 2B">
+      </datalist>
+      <button class="btn btn-primary" type="submit">Find a group</button>
+    </form>
+  </section>
+
+  <h2>How it works</h2>
+  <div class="grid grid-3 how-it-works">
+    <div class="card"><h3>1. Search your module</h3><p class="muted">Browse open study groups for any module you are registered for. Filter by day, meeting mode and group size.</p></div>
+    <div class="card"><h3>2. Join or create</h3><p class="muted">Send a short join request, or create your own group in two quick steps. It takes about two minutes.</p></div>
+    <div class="card"><h3>3. Schedule &amp; meet</h3><p class="muted">Propose a session, let the group vote, and get a reminder before you meet. Mark sessions as done to track your progress.</p></div>
+  </div>
+
+  <h2>Popular groups this week</h2>
+  <div class="grid grid-3">
+    <div class="card group-card">
+      <h3><a href="#/group/hcin6222">HCIN6222 Exam prep circle</a></h3>
+      <p class="meta"><span>Tue &amp; Thu, 17:00</span><span><span class="stars" aria-label="Rated 4.9 out of 5">&#9733;&#9733;&#9733;&#9733;&#189;</span> <span class="rating-value">4.9</span></span></p>
+      <div><span class="tag">On-campus</span><span class="tag tag-blue">Exam-prep</span></div>
+      <div class="group-card-bottom"><a class="group-link" href="#/group/hcin6222">View group</a><span class="member-count">5/6 members</span></div>
+    </div>
+    <div class="card group-card">
+      <h3><a href="#/group/ipma6212">IPMA6212 Project Planners</a></h3>
+      <p class="meta"><span>Wed, 18:30</span><span><span class="stars" aria-label="Rated 4.8 out of 5">&#9733;&#9733;&#9733;&#9733;&#9734;</span> <span class="rating-value">4.8</span></span></p>
+      <div><span class="tag tag-blue">Online</span><span class="tag">Assignments</span></div>
+      <div class="group-card-bottom"><a class="group-link" href="#/group/ipma6212">View group</a><span class="member-count">3/5 members</span></div>
+    </div>
+    <div class="card group-card">
+      <h3><a href="#/group/prog6212">PROG6212 C# Programmers</a></h3>
+      <p class="meta"><span>Mon &amp; Fri, 16:00</span><span><span class="stars" aria-label="Rated 5.0 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="rating-value">5.0</span></span></p>
+      <div><span class="tag">On-campus</span><span class="tag tag-blue">Weekly practice</span></div>
+      <div class="group-card-bottom"><a class="group-link" href="#/group/prog6212">View group</a><span class="member-count">4/6 members</span></div>
+    </div>
+  </div>
+`;
+
+screens.search = `
+  <div class="breadcrumb"><a href="#/home">Home</a> &rsaquo; Find a group</div>
+  <h1>Find a study group</h1>
+  <p class="muted">Results for <b>COS1501 Theoretical Computer Science</b>. Filter to narrow your options.</p>
+
+  <form class="card" style="padding:16px" onsubmit="return false;" aria-label="Filter study groups">
+    <div class="grid grid-3">
+      <div><label for="f-day">Day of week</label>
+        <select id="f-day"><option>Any day</option><option>Monday</option><option>Tuesday</option><option>Thursday</option></select></div>
+      <div><label for="f-mode">Meeting mode</label>
+        <select id="f-mode"><option>Any mode</option><option>On-campus</option><option>Online</option></select></div>
+      <div><label for="f-size">Group size</label>
+        <select id="f-size"><option>Any size</option><option>2&ndash;4 members</option><option>5&ndash;6 members</option></select></div>
+    </div>
+    <p style="margin:16px 0 0"><button class="btn btn-primary btn-small" type="submit">Apply filters</button>
+    <button class="btn btn-ghost btn-small" type="reset">Clear</button></p>
+  </form>
+
+  <div class="grid grid-3" style="margin-top:20px">
+    <div class="card">
+      <h3><a href="#/group/cos1501-exam">COS1501 Exam Prep Circle</a></h3>
+      <p class="meta"><span><b>5</b>/6 members</span><span>Tue &amp; Thu, 17:00</span><span class="stars" aria-label="Rated 4.5 out of 5">&#9733;&#9733;&#9733;&#9733;&#189;</span></p>
+      <p class="muted" style="font-size:.92rem">Focused past-paper practice leading up to the October exam. We work through two papers per session.</p>
+      <span class="tag">On-campus</span><span class="tag tag-blue">Library, Room 2B</span>
+      <p style="margin-top:14px"><a class="btn btn-primary btn-small" href="#/joined">Request to join</a></p>
+    </div>
+    <div class="card">
+      <h3><a href="#/group/cos1501-logic">COS1501 Logic Night Owls</a></h3>
+      <p class="meta"><span><b>2</b>/5 members</span><span>Thu, 20:00</span><span class="stars" aria-label="New group, not yet rated">Not yet rated</span></p>
+      <p class="muted" style="font-size:.92rem">Evening online group working through proof exercises together. Beginners very welcome.</p>
+      <span class="tag tag-blue">Online</span><span class="tag">Beginner-friendly</span>
+      <p style="margin-top:14px"><a class="btn btn-primary btn-small" href="#/joined">Request to join</a></p>
+    </div>
+    <div class="card">
+      <h3><a href="#/group/cos1501-weekend">COS1501 Weekend Warriors</a></h3>
+      <p class="meta"><span><b>6</b>/6 members</span><span>Sat, 09:00</span><span class="stars" aria-label="Rated 4 out of 5">&#9733;&#9733;&#9733;&#9733;</span></p>
+      <p class="muted" style="font-size:.92rem">Saturday morning deep-dives, one chapter per week with summary notes shared afterwards.</p>
+      <span class="tag">On-campus</span><span class="tag tag-blue">Full (join waitlist)</span>
+      <p style="margin-top:14px"><button class="btn btn-ghost btn-small" disabled>Full (waitlist only)</button></p>
+    </div>
+  </div>
+`;
+
+screens.joined = screens.search.replace(
+  '<p style="margin-top:14px"><a class="btn btn-primary btn-small" href="#/joined">Request to join</a></p>',
+  '<p class="success-text" style="margin-top:14px">&#10003; Join request sent! The group owner has been notified.&#128077</p>');
+
+screens.create = `
+  <div class="breadcrumb"><a href="#/home">Home</a> &rsaquo; Create a group</div>
+  <h1>Create a study group</h1>
+  <p class="muted">In two quick steps, your group will be visible to other students right away.</p>
+  <div class="steps" aria-label="Progress">
+    <div class="step done">Step 1 &middot; Basics &check;</div>
+    <div class="step active" aria-current="step">Step 2 &middot; Schedule</div>
+    <div class="step">Done</div>
+  </div>
+  <div class="card" style="max-width:640px">
+    <h3>Step 2 of 2: When will your group meet?</h3>
+    <form onsubmit="toast('Your group \u201COS1501 Exam Prep Circle\u201D is now live!');return false;">
+      <label for="g-day">Preferred day(s)</label>
+      <select id="g-day"><option>Tuesdays &amp; Thursdays</option><option>Mondays</option><option>Weekends</option></select>
+      <label for="g-time">Start time</label>
+      <input type="time" id="g-time" value="17:00">
+      <label for="g-mode">Meeting mode</label>
+      <select id="g-mode"><option>On-campus (Library)</option><option>Online (Microsoft Teams)</option><option>Hybrid</option></select>
+      <label for="g-cap">Maximum group size</label>
+      <select id="g-cap"><option>6 members</option><option>4 members</option><option>8 members</option></select>
+      <div class="hint">You can change any of this later from your group page.</div>
+      <p style="margin-top:20px">
+        <button class="btn btn-ghost" type="button" onclick="toast('Saved. Going back to Step 1.')">&lsaquo; Back</button>
+        <button class="btn btn-primary" type="submit">Publish group</button>
+      </p>
+    </form>
+  </div>
+`;
+
+screens.group = `
+  <div class="breadcrumb"><a href="#/home">Home</a> &rsaquo; <a href="#/search">Find a group</a> &rsaquo; {{title}}</div>
+  <h1>{{title}}</h1>
+  <p class="meta"><span class="tag">{{mode}}</span><span class="tag tag-blue">{{location}}</span>
+     <span><b>{{members}}</b>/{{capacity}} members</span><span class="stars" aria-label="{{ratingLabel}}">{{ratingStars}}</span>
+     <span class="rating-value">{{rating}}</span><span><b>12 sessions</b> completed</span></p>
+  <p class="muted">{{description}}</p>
+
+  <h2>Upcoming sessions</h2>
+  <div class="session">
+    <div><span class="when">{{session1}}</span><br><span class="muted" style="font-size:.88rem">{{location}} &middot; {{topic1}}</span></div>
+    <div><span class="status confirmed">&#10003; Confirmed</span><br><span class="muted" style="font-size:.82rem">{{accepted1}}</span></div>
+  </div>
+  <div class="session">
+    <div><span class="when">{{session2}}</span><br><span class="muted" style="font-size:.88rem">{{location}} &middot; {{topic2}}</span></div>
+    <div class="session-actions">
+      <span class="status pending">{{accepted2}}</span>
+      <button class="btn btn-primary btn-small" onclick="toast('You accepted. Please await further instructions from your group leader')">Accept</button>
+      <button class="btn btn-ghost btn-small" onclick="toast('Response recorded. You declined this session.')">Decline</button>
+    </div>
+  </div>
+  <p><button class="btn btn-ghost btn-small" onclick="toast('Session proposed to the group \u2014 waiting for votes.')">+ Propose a new session</button></p>
+
+  <h2>Members</h2>
+  <div class="card" style="max-width:520px">
+    <div class="member"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Thandi profile picture"></span><div><b>Thandi K.</b> <span class="tag" style="font-size:.72rem">Owner</span><br><span class="muted" style="font-size:.83rem">Organises venue &amp; past papers</span></div></div>
+    <div class="member"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Sipho profile picture"></span><div><b>Sipho N.</b><br><span class="muted" style="font-size:.83rem">Strong at proofs</span></div></div>
+    <div class="member"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Lerato profile picture"></span><div><b>Lerato M.</b><br><span class="muted" style="font-size:.83rem">Keeps summary notes</span></div></div>
+    <div class="member"><span class="avatar" aria-hidden="true"><img src="https://i.scdn.co/image/ab67616d0000b273df719605b0ea2e8132492f54" alt="Likhaya profile picture"></span><div><b>You (Likhaya)</b><br><span class="muted" style="font-size:.83rem">Joined 2 weeks ago</span></div></div>
+  </div>
+
+  <h2>Group chat</h2>
+  <div class="thread" aria-label="Group messages">
+    <div class="msg"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Thandi profile picture"></span><div class="bubble"><span class="who">Thandi K. <time>Mon 14:02</time></span>I\u2019ve booked Room 607 for Tuesday. Same time as usual.</div></div>
+    <div class="msg"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Lerato profile picture"></span><div class="bubble"><span class="who">Lerato M. <time>Mon 14:10</time></span>Great, I\u2019ll bring the 2024 paper, with the memorandum as well.</div></div>
+    <div class="msg mine"><span class="avatar" aria-hidden="true"><img src="https://i.scdn.co/image/ab67616d0000b273df719605b0ea2e8132492f54" alt="Likhaya profile picture"></span><div class="bubble"><span class="who">You <time>Mon 14:15</time></span>Perfect. Could we spend the last 30 minutes on quizzes?</div></div>
+    <div class="msg"><span class="avatar" aria-hidden="true"><img src="https://i.pinimg.com/236x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg?nii=t" alt="Sipho profile picture"></span><div class="bubble"><span class="who">Sipho N. <time>Mon 14:18</time></span>Yes, I\u2019ll prepare 15 practice problems for that.</div></div>
+  </div>
+  <form class="searchbar" style="max-width:520px" onsubmit="toast('Message sent to the group.');return false;">
+    <label for="chat-input" class="skip-link">Type a message</label>
+    <input type="text" id="chat-input" placeholder="Message the group\u2026" aria-label="Type a message to the group">
+    <button class="btn btn-primary" type="submit">Send</button>
+  </form>
+  <div class="conduct"><b>Code of conduct:</b> be respectful, keep messages study-related, and never share members\u2019 details outside the group. <a href="#">Report a concern</a></div>
+`;
+
+screens.mygroups = `
+  <h1>My groups</h1>
+  <div class="celebrate" role="status">
+    <span style="font-size:2rem" aria-hidden="true">&#127942;</span>
+    <div><div class="big">Session completed! NICE WORK!</div>
+    <div>You\u2019ve completed <b>12 sessions</b> with HCIN6222 Exam Prep Circle this semester. Keep the momentum going!</div></div>
+  </div>
+  <div class="card" style="margin-bottom:18px">
+    <h3><a href="#/group/hcin6222">HCIN6222 Exam Prep Circle</a></h3>
+    <p class="meta"><span><b>5</b>/6 members</span><span>Tue &amp; Thu, 17:00</span><span>Library, Room 2B</span></p>
+    <div class="session" style="box-shadow:none;margin:10px 0 0">
+      <div><span class="when">Next session: Tue 6 Oct, 17:00</span><br><span class="muted" style="font-size:.88rem">Reminder will be sent by SMS 1 hour before</span></div>
+      <span class="status confirmed">&#10003; Confirmed</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3><a href="#/group/ipma6212">IPMA6212 Project Planners</a> <span class="tag tag-blue" style="font-size:.72rem">Join request pending</span></h3>
+    <p class="meta"><span><b>3</b>/5 members</span><span>Wed, 18:30</span><span>Online</span></p>
+    <p class="muted" style="font-size:.92rem;margin-bottom:0">The group owner usually responds within a day. We\u2019ll notify you by email.</p>
+  </div>
+`;
+
+screens.empty = `
+  <div class="breadcrumb"><a href="#/home">Home</a> &rsaquo; Find a group</div>
+  <h1>Find a study group</h1>
+  <p class="muted">Results for <b>PHY1503 &mdash; Physics for Engineers</b></p>
+  <div class="empty" role="status">
+    <div class="emoji" aria-hidden="true">&#128161;</div>
+    <h3>No groups for PHY1503 yet</h3>
+    <p class="muted">You could be the one to start something great. It only takes about two minutes.</p>
+    <p style="margin-top:18px"><a class="btn btn-primary" href="#/create">Be the first to create a group</a></p>
+  </div>
+`;
+
+function go(h){ location.hash = h; }
+const groups = {
+  'hcin6222': {
+    title: 'HCIN6222 Exam prep circle', mode: 'On-campus', location: 'Campus study room',
+    members: '5', capacity: '6', rating: '4.9', ratingLabel: 'Rated 4.9 out of 5',
+    ratingStars: '&#9733;&#9733;&#9733;&#9733;&#189;', accepted1: '5 of 5 accepted', accepted2: '3 of 5 accepted',
+    description: 'Prepare for HCIN6222 together with focused exam review, practice questions and shared study notes.',
+    session1: 'Tue 6 Oct, 17:00–19:00', session2: 'Thu 8 Oct, 17:00–19:00',
+    topic1: 'Exam review and practice questions', topic2: 'Revision and shared notes'
+  },
+  'ipma6212': {
+    title: 'IPMA6212 Project Planners', mode: 'Online', location: 'Microsoft Teams',
+    members: '3', capacity: '5', rating: '4.8', ratingLabel: 'Rated 4.8 out of 5',
+    ratingStars: '&#9733;&#9733;&#9733;&#9733;&#189;', accepted1: '3 of 3 accepted', accepted2: '2 of 3 accepted',
+    description: 'Plan project work together, compare approaches and keep assignments on track with this online study group.',
+    session1: 'Wed 7 Oct, 18:30–20:00', session2: 'Sat 10 Oct, 10:00–11:30',
+    topic1: 'Project planning and assignments', topic2: 'Progress check-in'
+  },
+  'prog6212': {
+    title: 'PROG6212 C# Programmers', mode: 'On-campus', location: 'Computer lab',
+    members: '4', capacity: '6', rating: '5.0', ratingLabel: 'Rated 5.0 out of 5',
+    ratingStars: '&#9733;&#9733;&#9733;&#9733;&#9733;', accepted1: '4 of 4 accepted', accepted2: '3 of 4 accepted',
+    description: 'Build C# skills through weekly practice, collaborative coding and helpful peer feedback.',
+    session1: 'Mon 5 Oct, 16:00–18:00', session2: 'Fri 9 Oct, 16:00–18:00',
+    topic1: 'C# coding practice', topic2: 'Review and debugging'
+  },
+  'cos1501-exam': {
+    title: 'COS1501 Exam Prep Circle', mode: 'On-campus', location: 'Library, Room 2B',
+    members: '5', capacity: '6', rating: '4.5', ratingLabel: 'Rated 4.5 out of 5',
+    ratingStars: '&#9733;&#9733;&#9733;&#9733;&#189;', accepted1: '5 of 5 accepted', accepted2: '3 of 5 accepted',
+    description: 'Focused past-paper practice leading up to the October exam. We work through two papers per session and share marked solutions afterwards.',
+    session1: 'Tue 6 Oct, 17:00–19:00', session2: 'Thu 8 Oct, 17:00–19:00',
+    topic1: 'Past papers 2019–2021', topic2: 'Automata revision'
+  },
+  'cos1501-logic': {
+    title: 'COS1501 Logic Night Owls', mode: 'Online', location: 'Microsoft Teams',
+    members: '2', capacity: '5', rating: 'Not yet rated', ratingLabel: 'Not yet rated',
+    ratingStars: 'Not yet rated', accepted1: '2 of 2 accepted', accepted2: '1 of 2 accepted',
+    description: 'An evening online group working through proof exercises together. Beginners are very welcome.',
+    session1: 'Thu 8 Oct, 20:00–21:30', session2: 'Thu 15 Oct, 20:00–21:30',
+    topic1: 'Proof exercises', topic2: 'Practice problems'
+  },
+  'cos1501-weekend': {
+    title: 'COS1501 Weekend Warriors', mode: 'On-campus', location: 'Campus study room',
+    members: '6', capacity: '6', rating: '4.0', ratingLabel: 'Rated 4.0 out of 5',
+    ratingStars: '&#9733;&#9733;&#9733;&#9733;', accepted1: '6 of 6 accepted', accepted2: '4 of 6 accepted',
+    description: 'Saturday morning deep-dives, one chapter per week with summary notes shared afterwards.',
+    session1: 'Sat 10 Oct, 09:00–11:00', session2: 'Sat 17 Oct, 09:00–11:00',
+    topic1: 'Weekly chapter review', topic2: 'Practice and shared notes'
+  }
+};
+function renderGroup(groupId) {
+  const group = groups[groupId] || groups['cos1501-exam'];
+  return screens.group.replace(/\{\{(\w+)\}\}/g, (placeholder, key) => group[key] || placeholder);
+}
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t=document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2600);
+}
+function render(){
+  let h = location.hash.replace('#/','') || 'home';
+  const isGroupRoute = h === 'group' || h.startsWith('group/');
+  if(!screens[h] && !isGroupRoute) h='home';
+  const content = isGroupRoute ? renderGroup(h.split('/')[1] || 'cos1501-exam') : screens[h];
+  document.getElementById('main-content').innerHTML = content;
+  document.querySelectorAll('[data-nav]').forEach(a=>{
+    if(a.dataset.nav===h || (isGroupRoute && a.dataset.nav==='search')) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+  });
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>
